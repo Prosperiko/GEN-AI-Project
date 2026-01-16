@@ -90,7 +90,7 @@ def get_llm_response(text_context, user_question, api_key):
             model="gpt-4o-mini",
             api_key= api_key,
             temperature=0.3,
-            max_new_tokens=512
+            max_tokens=512
         )
 
         # ✅ NEW LangChain pattern (Runnable)
