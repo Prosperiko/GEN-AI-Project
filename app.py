@@ -62,6 +62,7 @@ def get_llm_response(text_context, user_question, api_key):
     1. Answer ONLY from the context.
     2. If not found, say: "I cannot find that information in the document."
     3. Keep answers concise.
+    4. They have a max token of 512, so whatever you answer must fit within that limit.
 
     CONTEXT:
     {context}
@@ -88,7 +89,8 @@ def get_llm_response(text_context, user_question, api_key):
         llm = ChatOpenAI(
             model="gpt-4o-mini",
             api_key= api_key,
-            temperature=0.3
+            temperature=0.3,
+            max_new_tokens=512
         )
 
         # ✅ NEW LangChain pattern (Runnable)
