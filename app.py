@@ -110,7 +110,7 @@ st.title("📄 DocuMind: AI PDF Scanner")
 st.markdown("Upload a PDF (Text or Image/Scanned) to summarize it or ask questions.")
 
 if not hf_api_key:
-    st.warning("Please enter your Hugging Face API Token in the sidebar to proceed.")
+    st.warning("Please enter your OpenAI API Token in the sidebar to proceed.")
 else:
     uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
 
