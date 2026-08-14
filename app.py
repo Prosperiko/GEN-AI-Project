@@ -146,3 +146,19 @@ else:
                     st.write(answer)
         else:
             st.error("Could not extract text. The file might be empty or too blurry.")
+
+
+def keep_alive():
+    while True:
+        try:
+            url = "https://fincom.onrender.com/"  # Replace with your actual Render URL
+            res = requests.get(url)
+            print(f"Pinged at {time.ctime()}: Status {res.status_code}")
+        except Exception as e:
+            print(f"Error pinging at {time.ctime()}: {e}")
+        time.sleep(60 * 12)  # Ping every 14 minutes
+
+# # Create and start the background thread
+t = threading.Thread(target=keep_alive)
+t.daemon = True
+t.start()
