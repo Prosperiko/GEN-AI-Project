@@ -147,7 +147,7 @@ else:
         else:
             st.error("Could not extract text. The file might be empty or too blurry.")
 
-
+import threading
 def keep_alive():
     while True:
         try:
