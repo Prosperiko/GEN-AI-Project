@@ -151,7 +151,7 @@ else:
 def keep_alive():
     while True:
         try:
-            url = "https://fincom.onrender.com/"  # Replace with your actual Render URL
+            url = "https://docuaimind.streamlit.app/"  # Replace with your actual Render URL
             res = requests.get(url)
             print(f"Pinged at {time.ctime()}: Status {res.status_code}")
         except Exception as e:
