@@ -25,14 +25,14 @@ def extract_text_from_pdf(file):
     """
     text = ""
     try:
-        # Method 1: Standard Text Extraction
+        # Method 1: Standard Text Extraction. This is just to extract the text
         pdf_reader = PyPDF2.PdfReader(file)
         for page in pdf_reader.pages:
             page_text = page.extract_text()
             if page_text:
                 text += page_text + "\n"
         
-        # Method 2: OCR (if standard extraction failed or was too short)
+        # Method 2: OCR (if standard extraction failed or was too short, fall to this)
         if len(text) < 50:
             st.info("⚠️ Scanned document detected. Engaging OCR (this may take a moment)...")
             # Reset file pointer to read bytes for image conversion
@@ -85,7 +85,7 @@ def get_llm_response(text_context, user_question, api_key):
         #     temperature=0.3,
         #     max_new_tokens=512,
         #     timeout=300
-        # )
+        # ) Note to self,(this gave issues)
         llm = ChatOpenAI(
             model="gpt-4o-mini",
             api_key= api_key,
@@ -93,7 +93,7 @@ def get_llm_response(text_context, user_question, api_key):
             max_tokens=512
         )
 
-        # ✅ NEW LangChain pattern (Runnable)
+        #  NEW LangChain pattern (Runnable)
         chain = prompt | llm
 
         response = chain.invoke({
@@ -106,7 +106,7 @@ def get_llm_response(text_context, user_question, api_key):
     except Exception as e:
         return f"Error connecting to model: {repr(e)}"
 
-# --- MAIN APP UI ---
+# --- MAIN APP UI (How it looks) ---
 
 st.title("📄 DocuMind: AI PDF Scanner")
 st.markdown("Upload a PDF (Text or Image/Scanned) to summarize it or ask questions.")
