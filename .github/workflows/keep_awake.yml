@@ -1,20 +1,36 @@
 name: Keep Streamlit Awake
-
 on:
   schedule:
-    - cron: "0 */10 * * *" # Runs automatically every 10 hours
-  workflow_dispatch: # Allows you to trigger it manually if needed
+    - cron: "23 */6 * * *"   # every 6 hours, well under the 12h limit
+  workflow_dispatch:
 
 jobs:
-  keep-alive:
+  ping:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Keep alive with empty commit
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install puppeteer
+      - name: Visit app and wake if sleeping
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit --allow-empty -m "chore: keep streamlit app awake"
-          git push
+          node -e "
+          const puppeteer = require('puppeteer');
+          (async () => {
+            const browser = await puppeteer.launch({
+              args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+            const page = await browser.newPage();
+            await page.goto('https://docuaimind.streamlit.app/',
+                            {waitUntil: 'domcontentloaded', timeout: 60000});
+            await new Promise(r => setTimeout(r, 5000));
+            const clicked = await page.evaluate(() => {
+              const b = [...document.querySelectorAll('button')]
+                .find(x => /back up/i.test(x.innerText));
+              if (b) { b.click(); return true; } return false;
+            });
+            console.log(clicked ? 'Was asleep — clicked wake button' : 'Already awake');
+            if (clicked) await new Promise(r => setTimeout(r, 30000));
+            await browser.close();
+          })().catch(e => { console.error(e); process.exit(1); });
+          "
